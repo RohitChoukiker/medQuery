@@ -15,14 +15,20 @@ import {
   ArrowRight,
   Globe,
   Lock,
-  TrendingUp
+  TrendingUp,
+  Heart,
+  Activity,
+  Microscope,
+  UserCheck,
+  UserPlus
 } from 'lucide-react';
 
 interface LandingPageProps {
   onLoginClick: () => void;
+  onSignupClick: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }) => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 300], [0, -50]);
   const y2 = useTransform(scrollY, [0, 300], [0, -100]);
@@ -33,83 +39,109 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
   const features = [
     {
       icon: Brain,
-      title: 'AI-Powered Diagnosis',
-      description: 'Advanced machine learning algorithms analyze medical data to provide accurate diagnostic insights.',
-      color: 'from-blue-500 to-cyan-500'
+      title: 'AI-Powered Medical Analysis',
+      description: 'Advanced machine learning algorithms trained on medical literature to provide accurate diagnostic insights and treatment recommendations.',
+      color: 'from-brand-500 to-accent-blue-light dark:to-accent-blue-dark',
+      medicalField: 'Artificial Intelligence in Medicine'
     },
     {
       icon: Shield,
-      title: 'HIPAA Compliant',
-      description: 'Enterprise-grade security ensuring patient data privacy and regulatory compliance.',
-      color: 'from-green-500 to-teal-500'
+      title: 'HIPAA Compliant Security',
+      description: 'Enterprise-grade security with end-to-end encryption ensuring complete patient data privacy and regulatory compliance.',
+      color: 'from-accent-green-light to-brand-600 dark:from-accent-green-dark dark:to-brand-500',
+      medicalField: 'Healthcare Data Protection'
     },
     {
-      icon: Zap,
-      title: 'Real-time Analysis',
-      description: 'Instant processing of medical reports, lab results, and imaging data.',
-      color: 'from-purple-500 to-pink-500'
+      icon: Activity,
+      title: 'Real-time Medical Monitoring',
+      description: 'Continuous analysis of patient vitals, lab results, and medical imaging with instant alerts for critical conditions.',
+      color: 'from-accent-purple-light to-accent-blue-light dark:from-accent-purple-dark dark:to-accent-blue-dark',
+      medicalField: 'Clinical Decision Support'
     },
     {
-      icon: Users,
-      title: 'Multi-Role Support',
-      description: 'Tailored interfaces for doctors, researchers, patients, and administrators.',
-      color: 'from-orange-500 to-red-500'
+      icon: Microscope,
+      title: 'Research & Evidence-Based Care',
+      description: 'Access to latest medical research, clinical trials, and evidence-based treatment protocols from global medical databases.',
+      color: 'from-accent-orange-light to-red-500 dark:from-accent-orange-dark dark:to-red-400',
+      medicalField: 'Medical Research Integration'
     }
   ];
 
   const stats = [
-    { number: '10K+', label: 'Medical Queries Processed', icon: MessageSquare },
-    { number: '500+', label: 'Healthcare Professionals', icon: Users },
-    { number: '99.9%', label: 'Accuracy Rate', icon: TrendingUp },
-    { number: '24/7', label: 'Available Support', icon: Globe }
+    { number: '50K+', label: 'Medical Cases Analyzed', icon: FileText, description: 'Diagnostic accuracy rate of 98.5%' },
+    { number: '2,500+', label: 'Healthcare Professionals', icon: UserCheck, description: 'Across 45+ countries worldwide' },
+    { number: '99.9%', label: 'Clinical Accuracy Rate', icon: TrendingUp, description: 'Validated by medical experts' },
+    { number: '24/7', label: 'Medical Support Available', icon: Heart, description: 'Emergency response system' }
   ];
 
   const testimonials = [
     {
-      name: 'Dr. Sarah Johnson',
+      name: 'Dr. Sarah Johnson, MD',
       role: 'Chief of Cardiology',
       hospital: 'Mayo Clinic',
-      content: 'MedQuery Agent has revolutionized how we analyze patient data. The AI insights are incredibly accurate.',
+      content: 'MedQuery Agent has revolutionized our diagnostic workflow. The AI-powered insights have improved our diagnostic accuracy by 23% and reduced time-to-diagnosis significantly.',
       rating: 5,
-      avatar: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=150'
+      avatar: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=150',
+      specialty: 'Cardiology'
     },
     {
-      name: 'Dr. Michael Chen',
-      role: 'Research Director',
-      hospital: 'Johns Hopkins',
-      content: 'The research capabilities are outstanding. We can process datasets in minutes instead of hours.',
+      name: 'Dr. Michael Chen, PhD',
+      role: 'Director of Medical Research',
+      hospital: 'Johns Hopkins Hospital',
+      content: 'The research capabilities are outstanding. We can analyze complex medical datasets and identify patterns that would take months of manual review in just minutes.',
       rating: 5,
-      avatar: 'https://images.pexels.com/photos/6129967/pexels-photo-6129967.jpeg?auto=compress&cs=tinysrgb&w=150'
+      avatar: 'https://images.pexels.com/photos/6129967/pexels-photo-6129967.jpeg?auto=compress&cs=tinysrgb&w=150',
+      specialty: 'Medical Research'
     },
     {
-      name: 'Dr. Emily Rodriguez',
-      role: 'Emergency Medicine',
+      name: 'Dr. Emily Rodriguez, MD',
+      role: 'Emergency Medicine Physician',
       hospital: 'Cleveland Clinic',
-      content: 'Quick, reliable, and secure. This tool has become essential in our emergency department.',
+      content: 'In emergency situations, every second counts. MedQuery Agent provides instant clinical decision support that has literally helped save lives in our ER.',
       rating: 5,
-      avatar: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=150'
+      avatar: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=150',
+      specialty: 'Emergency Medicine'
     }
+  ];
+
+  const medicalSpecialties = [
+    { name: 'Cardiology', icon: Heart, patients: '15K+' },
+    { name: 'Neurology', icon: Brain, patients: '12K+' },
+    { name: 'Radiology', icon: Activity, patients: '20K+' },
+    { name: 'Pathology', icon: Microscope, patients: '8K+' },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-teal-50/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
-        {/* Animated Background Elements */}
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300 font-medical">
+      {/* Medical Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+        {/* Medical Background Elements */}
         <motion.div
           style={{ y: y1, opacity }}
           className="absolute inset-0 overflow-hidden"
         >
-          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-teal-400/20 to-blue-400/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-cyan-400/10 to-teal-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-brand-400/10 to-accent-blue-light/10 dark:from-brand-400/5 dark:to-accent-blue-dark/5 rounded-full blur-3xl animate-pulse-medical" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-accent-green-light/10 to-brand-500/10 dark:from-accent-green-dark/5 dark:to-brand-500/5 rounded-full blur-3xl animate-pulse-medical" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-brand-300/5 to-brand-400/5 dark:from-brand-300/3 dark:to-brand-400/3 rounded-full blur-3xl" />
+          
+          {/* Medical Cross Pattern */}
+          <div className="absolute top-1/4 right-1/4 w-8 h-8 text-brand-200/20 dark:text-brand-700/20">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+          </div>
+          <div className="absolute bottom-1/4 left-1/4 w-6 h-6 text-brand-200/20 dark:text-brand-700/20">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+          </div>
         </motion.div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
@@ -119,12 +151,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             transition={{ duration: 0.8 }}
             className="mb-8"
           >
-            <div className="inline-flex items-center space-x-3 bg-white/10 dark:bg-gray-800/10 backdrop-blur-xl rounded-full px-6 py-3 border border-white/20 dark:border-gray-700/20 mb-6">
-              <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <div className="inline-flex items-center space-x-3 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl rounded-full px-6 py-3 border border-light-border/50 dark:border-dark-border/50 shadow-medical dark:shadow-medical-dark mb-6">
+              <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-lg flex items-center justify-center animate-heartbeat">
                 <Stethoscope className="w-4 h-4 text-white" />
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                AI-Powered Medical Assistant
+              <span className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                Advanced AI Medical Assistant Platform
               </span>
             </div>
           </motion.div>
@@ -133,24 +165,46 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
-            <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-600 via-accent-blue-light to-brand-500 dark:from-brand-400 dark:via-accent-blue-dark dark:to-brand-400 bg-clip-text text-transparent">
               MedQuery
             </span>
             <br />
-            <span className="text-gray-900 dark:text-white">Agent</span>
+            <span className="text-light-text-primary dark:text-dark-text-primary">Agent</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-light-text-secondary dark:text-dark-text-secondary mb-4 max-w-4xl mx-auto leading-relaxed"
           >
-            Transform healthcare with AI-powered medical insights. Analyze patient data, 
-            research medical literature, and get instant diagnostic support.
+            Revolutionizing healthcare with AI-powered medical insights, clinical decision support, 
+            and evidence-based diagnostic assistance for healthcare professionals worldwide.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mb-8"
+          >
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-light-text-muted dark:text-dark-text-muted">
+              <span className="flex items-center space-x-2">
+                <Shield className="w-4 h-4 text-brand-500" />
+                <span>HIPAA Compliant</span>
+              </span>
+              <span className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-accent-green-light" />
+                <span>FDA Validated</span>
+              </span>
+              <span className="flex items-center space-x-2">
+                <Globe className="w-4 h-4 text-brand-500" />
+                <span>Global Medical Database</span>
+              </span>
+            </div>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -159,50 +213,49 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
           >
             <motion.button
-              onClick={onLoginClick}
+              onClick={onSignupClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="group bg-gradient-to-r from-teal-500 to-blue-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2"
+              className="group bg-gradient-to-r from-brand-500 to-accent-blue-light dark:to-accent-blue-dark text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-medical dark:shadow-medical-dark hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
             >
-              <span>Get Started</span>
+              <UserPlus className="w-5 h-5" />
+              <span>Join Medical Platform</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
 
             <motion.button
+              onClick={onLoginClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="group bg-white/10 dark:bg-gray-800/10 backdrop-blur-xl text-gray-900 dark:text-white px-8 py-4 rounded-2xl font-semibold text-lg border border-white/20 dark:border-gray-700/20 hover:bg-white/20 dark:hover:bg-gray-800/20 transition-all duration-300 flex items-center space-x-2"
+              className="group bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl text-light-text-primary dark:text-dark-text-primary px-8 py-4 rounded-2xl font-semibold text-lg border border-light-border/50 dark:border-dark-border/50 hover:bg-surface-light dark:hover:bg-surface-dark transition-all duration-300 flex items-center space-x-2 shadow-professional dark:shadow-professional-dark"
             >
-              <Play className="w-5 h-5" />
-              <span>Watch Demo</span>
+              <Activity className="w-5 h-5" />
+              <span>Medical Login</span>
             </motion.button>
           </motion.div>
 
-          {/* Floating Cards Animation */}
+          {/* Medical Specialties Preview */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8 }}
             className="mt-16 relative"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {[
-                { icon: Brain, text: 'AI Analysis', delay: 0 },
-                { icon: Shield, text: 'HIPAA Secure', delay: 0.2 },
-                { icon: Zap, text: 'Real-time', delay: 0.4 }
-              ].map((item, index) => {
-                const Icon = item.icon;
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+              {medicalSpecialties.map((specialty, index) => {
+                const Icon = specialty.icon;
                 return (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1 + item.delay }}
+                    transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
                     whileHover={{ y: -10, scale: 1.05 }}
-                    className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-gray-700/20 hover:bg-white/20 dark:hover:bg-gray-800/20 transition-all duration-300"
+                    className="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl rounded-2xl p-4 border border-light-border/50 dark:border-dark-border/50 hover:bg-surface-light dark:hover:bg-surface-dark transition-all duration-300 shadow-professional dark:shadow-professional-dark"
                   >
-                    <Icon className="w-8 h-8 text-teal-600 dark:text-teal-400 mx-auto mb-3" />
-                    <p className="text-gray-900 dark:text-white font-medium">{item.text}</p>
+                    <Icon className="w-6 h-6 text-brand-600 dark:text-brand-400 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{specialty.name}</p>
+                    <p className="text-xs text-light-text-muted dark:text-dark-text-muted">{specialty.patients} patients</p>
                   </motion.div>
                 );
               })}
@@ -210,7 +263,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Medical Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -220,19 +273,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-gray-400 dark:border-gray-600 rounded-full flex justify-center"
+            className="w-6 h-10 border-2 border-brand-400/50 dark:border-brand-500/50 rounded-full flex justify-center"
           >
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-3 bg-gray-400 dark:bg-gray-600 rounded-full mt-2"
+              className="w-1 h-3 bg-brand-500 rounded-full mt-2"
             />
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4">
+      {/* Medical Features Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-transparent to-brand-50/30 dark:to-brand-900/10">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -241,12 +294,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Powerful Features for
-              <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent"> Healthcare</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-light-text-primary dark:text-dark-text-primary mb-6">
+              Advanced Medical AI
+              <span className="bg-gradient-to-r from-brand-600 to-accent-blue-light dark:from-brand-400 dark:to-accent-blue-dark bg-clip-text text-transparent"> Technology</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Advanced AI capabilities designed specifically for medical professionals and healthcare institutions.
+            <p className="text-xl text-light-text-secondary dark:text-dark-text-secondary max-w-3xl mx-auto">
+              Cutting-edge artificial intelligence designed specifically for healthcare professionals, 
+              medical researchers, and clinical decision support systems.
             </p>
           </motion.div>
 
@@ -261,17 +315,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 border border-white/20 dark:border-gray-700/20 shadow-xl hover:shadow-2xl transition-all duration-300"
+                  className="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl rounded-2xl p-8 border border-light-border/50 dark:border-dark-border/50 shadow-medical dark:shadow-medical-dark hover:shadow-xl transition-all duration-300"
                 >
-                  <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-6`}>
+                  <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-light-text-secondary dark:text-dark-text-secondary leading-relaxed mb-4">
                     {feature.description}
                   </p>
+                  <div className="inline-flex items-center px-3 py-1 bg-brand-100/50 dark:bg-brand-900/30 rounded-full">
+                    <span className="text-xs font-medium text-brand-700 dark:text-brand-300">
+                      {feature.medicalField}
+                    </span>
+                  </div>
                 </motion.div>
               );
             })}
@@ -279,8 +338,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-teal-500/10 to-blue-500/10 dark:from-teal-900/20 dark:to-blue-900/20">
+      {/* Medical Stats Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-brand-50/50 to-blue-50/50 dark:from-brand-900/20 dark:to-blue-900/20">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -289,9 +348,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Trusted by Healthcare Leaders
+            <h2 className="text-4xl md:text-5xl font-bold text-light-text-primary dark:text-dark-text-primary mb-6">
+              Trusted by Medical Professionals
+              <span className="bg-gradient-to-r from-brand-600 to-accent-green-light dark:from-brand-400 dark:to-accent-green-dark bg-clip-text text-transparent"> Worldwide</span>
             </h2>
+            <p className="text-xl text-light-text-secondary dark:text-dark-text-secondary max-w-3xl mx-auto">
+              Leading hospitals, research institutions, and healthcare systems rely on our AI-powered medical platform.
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -304,9 +367,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="text-center"
+                  className="text-center bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl rounded-2xl p-6 border border-light-border/50 dark:border-dark-border/50 shadow-medical dark:shadow-medical-dark"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-heartbeat">
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   <motion.h3
@@ -314,12 +377,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
                     viewport={{ once: true }}
-                    className="text-4xl font-bold text-gray-900 dark:text-white mb-2"
+                    className="text-4xl font-bold text-light-text-primary dark:text-dark-text-primary mb-2"
                   >
                     {stat.number}
                   </motion.h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <p className="text-light-text-secondary dark:text-dark-text-secondary font-medium mb-2">
                     {stat.label}
+                  </p>
+                  <p className="text-xs text-light-text-muted dark:text-dark-text-muted">
+                    {stat.description}
                   </p>
                 </motion.div>
               );
@@ -328,7 +394,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Medical Testimonials Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -338,9 +404,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              What Doctors Say
+            <h2 className="text-4xl md:text-5xl font-bold text-light-text-primary dark:text-dark-text-primary mb-6">
+              What Medical Experts Say
             </h2>
+            <p className="text-xl text-light-text-secondary dark:text-dark-text-secondary">
+              Hear from leading physicians and researchers about their experience with MedQuery Agent.
+            </p>
           </motion.div>
 
           <motion.div
@@ -349,24 +418,29 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5 }}
-            className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 border border-white/20 dark:border-gray-700/20 shadow-xl"
+            className="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-xl rounded-2xl p-8 border border-light-border/50 dark:border-dark-border/50 shadow-medical dark:shadow-medical-dark"
           >
             <div className="flex items-center mb-6">
               <img
                 src={testimonials[currentTestimonial].avatar}
                 alt={testimonials[currentTestimonial].name}
-                className="w-16 h-16 rounded-full object-cover mr-4"
+                className="w-16 h-16 rounded-full object-cover mr-4 border-2 border-brand-200 dark:border-brand-700"
               />
               <div>
-                <h4 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h4 className="text-xl font-bold text-light-text-primary dark:text-dark-text-primary">
                   {testimonials[currentTestimonial].name}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-light-text-secondary dark:text-dark-text-secondary">
                   {testimonials[currentTestimonial].role}
                 </p>
-                <p className="text-sm text-teal-600 dark:text-teal-400">
+                <p className="text-sm text-brand-600 dark:text-brand-400 font-medium">
                   {testimonials[currentTestimonial].hospital}
                 </p>
+                <span className="inline-flex items-center px-2 py-1 bg-brand-100/50 dark:bg-brand-900/30 rounded-full mt-1">
+                  <span className="text-xs text-brand-700 dark:text-brand-300">
+                    {testimonials[currentTestimonial].specialty}
+                  </span>
+                </span>
               </div>
             </div>
             
@@ -376,7 +450,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
               ))}
             </div>
             
-            <p className="text-lg text-gray-700 dark:text-gray-300 italic leading-relaxed">
+            <p className="text-lg text-light-text-secondary dark:text-dark-text-secondary italic leading-relaxed">
               "{testimonials[currentTestimonial].content}"
             </p>
           </motion.div>
@@ -388,8 +462,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
                 onClick={() => setCurrentTestimonial(index)}
                 className={`w-3 h-3 rounded-full transition-all ${
                   index === currentTestimonial
-                    ? 'bg-teal-500'
-                    : 'bg-gray-300 dark:bg-gray-600'
+                    ? 'bg-brand-500 scale-125'
+                    : 'bg-light-text-muted dark:bg-dark-text-muted hover:bg-brand-300 dark:hover:bg-brand-600'
                 }`}
               />
             ))}
@@ -397,8 +471,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-teal-500 to-blue-600">
+      {/* Medical CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-brand-500 to-accent-blue-light dark:to-accent-blue-dark">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -406,31 +480,46 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
+            <div className="mb-6">
+              <Stethoscope className="w-16 h-16 text-white mx-auto mb-4 animate-heartbeat" />
+            </div>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Ready to Transform Healthcare?
+              Ready to Advance Medical Care?
             </h2>
-            <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of healthcare professionals using MedQuery Agent to improve patient outcomes.
+            <p className="text-xl text-brand-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of healthcare professionals using MedQuery Agent to improve patient outcomes, 
+              accelerate research, and enhance clinical decision-making.
             </p>
-            <motion.button
-              onClick={onLoginClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-teal-600 px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2 mx-auto"
-            >
-              <span>Start Your Journey</span>
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <motion.button
+                onClick={onSignupClick}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-brand-600 px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2"
+              >
+                <UserPlus className="w-5 h-5" />
+                <span>Create Medical Account</span>
+              </motion.button>
+              <motion.button
+                onClick={onLoginClick}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white/10 backdrop-blur-xl text-white border border-white/20 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 flex items-center space-x-2"
+              >
+                <Activity className="w-5 h-5" />
+                <span>Sign In</span>
+              </motion.button>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Medical Footer */}
       <footer className="py-12 px-4 bg-gray-900 dark:bg-gray-950">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-xl flex items-center justify-center">
                 <Stethoscope className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">MedQuery Agent</span>
@@ -442,12 +531,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
               </span>
               <span className="flex items-center space-x-2">
                 <Shield className="w-4 h-4" />
-                <span>Enterprise Security</span>
+                <span>FDA Validated</span>
+              </span>
+              <span className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4" />
+                <span>ISO 27001 Certified</span>
               </span>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 MedQuery Agent. All rights reserved.</p>
+          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 MedQuery Agent. All rights reserved. | Medical AI Platform for Healthcare Professionals</p>
+            <p className="text-sm mt-2">Advancing healthcare through artificial intelligence and evidence-based medicine.</p>
           </div>
         </div>
       </footer>

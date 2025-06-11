@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sun, Moon, User, LogOut, Bell, Search } from 'lucide-react';
+import { Sun, Moon, User, LogOut, Bell, Search, Stethoscope } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -16,69 +16,97 @@ const Navbar: React.FC<NavbarProps> = ({ showThemeToggle = true }) => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50"
+      className="sticky top-0 z-50 backdrop-blur-xl bg-surface-light/80 dark:bg-surface-dark/80 border-b border-light-border/50 dark:border-dark-border/50 shadow-professional dark:shadow-professional-dark"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Medical Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">MQ</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-lg flex items-center justify-center shadow-medical dark:shadow-medical-dark">
+              <Stethoscope className="w-4 h-4 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-brand-600 to-accent-blue-light dark:from-brand-400 dark:to-accent-blue-dark bg-clip-text text-transparent">
               MedQuery Agent
             </span>
+            {user && (
+              <span className="hidden sm:inline-flex items-center px-2 py-1 bg-brand-100/50 dark:bg-brand-900/30 rounded-full text-xs font-medium text-brand-700 dark:text-brand-300">
+                Medical AI Platform
+              </span>
+            )}
           </div>
 
-          {/* Search Bar - Only show when authenticated */}
+          {/* Medical Search Bar - Only show when authenticated */}
           {user && (
             <div className="hidden md:flex flex-1 max-w-md mx-8">
               <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-text-muted dark:text-dark-text-muted w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search queries, documents..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all"
+                  placeholder="Search medical queries, patient records, research..."
+                  className="w-full pl-10 pr-4 py-2 bg-surface-light/50 dark:bg-surface-dark/50 border border-light-border/50 dark:border-dark-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted"
                 />
               </div>
             </div>
           )}
 
-          {/* Right Side */}
+          {/* Right Side Controls */}
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
+            {/* Professional Theme Toggle */}
             {showThemeToggle && (
-              <button
+              <motion.button
                 onClick={toggleTheme}
-                className="p-2 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors rounded-lg hover:bg-surface-light/50 dark:hover:bg-surface-dark/50"
               >
-                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-              </button>
+                {theme === 'light' ? (
+                  <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
+                )}
+              </motion.button>
             )}
 
-            {/* User Menu - Only show when authenticated */}
+            {/* Medical User Menu - Only show when authenticated */}
             {user && (
               <>
-                {/* Notifications */}
-                <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
+                {/* Medical Notifications */}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors rounded-lg hover:bg-surface-light/50 dark:hover:bg-surface-dark/50"
+                >
                   <Bell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
-                </button>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-medical-emergency rounded-full text-xs animate-pulse"></span>
+                </motion.button>
 
+                {/* Medical User Profile */}
                 <div className="flex items-center space-x-3">
                   <div className="hidden sm:block text-right">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{user?.role}</p>
+                    <p className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs text-light-text-muted dark:text-dark-text-muted capitalize flex items-center">
+                      <span className={`w-2 h-2 rounded-full mr-1 ${
+                        user?.role === 'doctor' ? 'bg-brand-500' :
+                        user?.role === 'researcher' ? 'bg-accent-purple-light' :
+                        user?.role === 'patient' ? 'bg-accent-green-light' :
+                        'bg-accent-orange-light'
+                      }`}></span>
+                      {user?.role}
+                    </p>
                   </div>
-                  <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-full flex items-center justify-center shadow-medical dark:shadow-medical-dark">
                     <User className="w-4 h-4 text-white" />
                   </div>
-                  <button
+                  <motion.button
                     onClick={logout}
-                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-medical-emergency transition-colors rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                   >
                     <LogOut className="w-4 h-4" />
-                  </button>
+                  </motion.button>
                 </div>
               </>
             )}
