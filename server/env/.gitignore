@@ -1,0 +1,29 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.log
+*.db
+*.sqlite3
+*.env
+.env.*
+
+# Virtual Environment
+env/
+venv/
+
+# === SQLAlchemy (DB-related) ===
+alembic.ini
+migrations/
+versions/
+*.sqlite3
+*.db
+
+
+# === VS Code / IDEs
+.vscode/
+.idea/
+
+# === OS / System files
+.DS_Store
+Thumbs.db
+
