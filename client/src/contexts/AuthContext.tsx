@@ -1,14 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserRole = 'doctor' | 'researcher' | 'patient' | 'admin';
 
 interface User {
   id: string;
   email: string;
-  name: string;
+  full_name: string;
   role: UserRole;
-  avatar?: string;
-  licenseNumber?: string;
+  license_number?: string;
   institution?: string;
   specialization?: string;
 }
@@ -41,57 +40,139 @@ export const useAuth = () => {
   return context;
 };
 
+// API URL
+const API_URL = 'http://localhost:8080';
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await fetch(`${API_URL}/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const userData = await response.json();
+            setUser({
+              id: userData.id.toString(),
+              email: userData.email,
+              full_name: userData.full_name,
+              role: userData.role as UserRole,
+              license_number: userData.license_number,
+              institution: userData.institution,
+              specialization: userData.specialization
+            });
+          } else {
+            // Token is invalid or expired
+            localStorage.removeItem('token');
+          }
+        } catch (error) {
+          console.error('Auth check failed:', error);
+          localStorage.removeItem('token');
+        }
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, []);
 
   const login = async (email: string, password: string, role: UserRole): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock authentication - in real app, this would call your API
-    if (email && password) {
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        role
-      };
-      setUser(mockUser);
-      return true;
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password, role })
+      });
+
+      if (!response.ok) {
+        return false;
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+
+      // Fetch user data
+      const userResponse = await fetch(`${API_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${data.access_token}`
+        }
+      });
+
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        setUser({
+          id: userData.id.toString(),
+          email: userData.email,
+          full_name: userData.full_name,
+          role: userData.role as UserRole,
+          license_number: userData.license_number,
+          institution: userData.institution,
+          specialization: userData.specialization
+        });
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    return false;
   };
 
   const signup = async (data: SignupData): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Mock signup - in real app, this would call your API
     try {
-      const newUser: User = {
-        id: Date.now().toString(),
-        email: data.email,
-        name: data.fullName,
-        role: data.role,
-        licenseNumber: data.licenseNumber,
-        institution: data.institution,
-        specialization: data.specialization
-      };
-      
-      setUser(newUser);
-      return true;
+      const response = await fetch(`${API_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: data.email,
+          full_name: data.fullName,
+          password: data.password,
+          role: data.role,
+          license_number: data.licenseNumber,
+          institution: data.institution,
+          specialization: data.specialization
+        })
+      });
+
+      if (!response.ok) {
+        return false;
+      }
+
+      // After signup, log the user in
+      return await login(data.email, data.password, data.role);
     } catch (error) {
+      console.error('Signup failed:', error);
       return false;
     }
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
   };
+
+  if (isLoading) {
+    // You could return a loading component here
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{
