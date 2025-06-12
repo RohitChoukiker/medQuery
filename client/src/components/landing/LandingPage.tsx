@@ -68,10 +68,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
   ];
 
   const stats = [
-    { number: '50K+', label: 'Medical Cases Analyzed', icon: FileText, description: 'Diagnostic accuracy rate of 98.5%' },
-    { number: '2,500+', label: 'Healthcare Professionals', icon: UserCheck, description: 'Across 45+ countries worldwide' },
-    { number: '99.9%', label: 'Clinical Accuracy Rate', icon: TrendingUp, description: 'Validated by medical experts' },
-    { number: '24/7', label: 'Medical Support Available', icon: Heart, description: 'Emergency response system' }
+    { number: '', label: 'Medical Cases Analyzed', icon: FileText, description: 'Diagnostic accuracy rate of 98.5%' },
+    { number: '', label: 'Healthcare Professionals', icon: UserCheck, description: 'Across 45+ countries worldwide' },
+    { number: '', label: 'Clinical Accuracy Rate', icon: TrendingUp, description: 'Validated by medical experts' },
+    { number: '', label: 'Medical Support Available', icon: Heart, description: 'Emergency response system' }
   ];
 
   const testimonials = [
@@ -105,10 +105,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
   ];
 
   const medicalSpecialties = [
-    { name: 'Cardiology', icon: Heart, patients: '15K+' },
-    { name: 'Neurology', icon: Brain, patients: '12K+' },
-    { name: 'Radiology', icon: Activity, patients: '20K+' },
-    { name: 'Pathology', icon: Microscope, patients: '8K+' },
+    { name: 'Cardiology', icon: Heart, patients: '' },
+    { name: 'Neurology', icon: Brain, patients: '' },
+    { name: 'Radiology', icon: Activity, patients: '' },
+    { name: 'Pathology', icon: Microscope, patients: '' },
   ];
 
   useEffect(() => {
@@ -395,7 +395,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
       </section>
 
       {/* Medical Testimonials Section */}
-      <section className="py-20 px-4">
+      {/* <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -469,7 +469,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Medical CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-r from-brand-500 to-accent-blue-light dark:to-accent-blue-dark">
@@ -524,7 +524,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
               </div>
               <span className="text-xl font-bold text-white">MedQuery Agent</span>
             </div>
-            <div className="flex items-center space-x-6 text-gray-400">
+            {/* <div className="flex items-center space-x-6 text-gray-400">
               <span className="flex items-center space-x-2">
                 <Lock className="w-4 h-4" />
                 <span>HIPAA Compliant</span>
@@ -537,7 +537,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onSignupClick }
                 <CheckCircle className="w-4 h-4" />
                 <span>ISO 27001 Certified</span>
               </span>
-            </div>
+            </div> */}
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
             <p>&copy; 2024 MedQuery Agent. All rights reserved. | Medical AI Platform for Healthcare Professionals</p>
