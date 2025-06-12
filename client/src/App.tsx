@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LandingPage from './components/landing/LandingPage';
@@ -19,43 +20,53 @@ type AuthView = 'landing' | 'login' | 'signup';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
-  const [authView, setAuthView] = useState<AuthView>('landing');
   const [activeTab, setActiveTab] = useState('dashboard');
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Sync activeTab with current route
+  React.useEffect(() => {
+    const path = location.pathname.substring(1); // Remove leading slash
+    if (path && path !== 'login' && path !== 'signup') {
+      setActiveTab(path);
+    }
+  }, [location.pathname]);
+  
+  // Use React Router for navigation
   // Show authentication flow if not authenticated
   if (!isAuthenticated) {
-    switch (authView) {
-      case 'login':
-        return (
+    return (
+      <Routes>
+        <Route path="/login" element={
           <>
             <Navbar showThemeToggle={true} />
             <LoginPage 
-              onBackToLanding={() => setAuthView('landing')}
-              onSwitchToSignup={() => setAuthView('signup')}
+              onBackToLanding={() => navigate('/')}
+              onSwitchToSignup={() => navigate('/signup')}
             />
           </>
-        );
-      case 'signup':
-        return (
+        } />
+        <Route path="/signup" element={
           <>
             <Navbar showThemeToggle={true} />
             <SignupPage 
-              onBackToLanding={() => setAuthView('landing')}
-              onSwitchToLogin={() => setAuthView('login')}
+              onBackToLanding={() => navigate('/')}
+              onSwitchToLogin={() => navigate('/login')}
             />
           </>
-        );
-      default:
-        return (
+        } />
+        <Route path="/" element={
           <>
             <Navbar showThemeToggle={true} />
             <LandingPage 
-              onLoginClick={() => setAuthView('login')}
-              onSignupClick={() => setAuthView('signup')}
+              onLoginClick={() => navigate('/login')}
+              onSignupClick={() => navigate('/signup')}
             />
           </>
-        );
-    }
+        } />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
   }
 
   const renderContent = () => {
@@ -292,7 +303,24 @@ const AppContent: React.FC = () => {
       <div className="flex">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <main className="flex-1 overflow-auto">
-          {renderContent()}
+          <Routes>
+            <Route path="/dashboard" element={renderContent()} />
+            <Route path="/chat" element={<ChatInterface />} />
+            <Route path="/upload" element={renderContent()} />
+            <Route path="/datasets" element={renderContent()} />
+            <Route path="/history" element={renderContent()} />
+            <Route path="/bookmarks" element={renderContent()} />
+            <Route path="/library" element={renderContent()} />
+            <Route path="/analytics" element={renderContent()} />
+            <Route path="/users" element={renderContent()} />
+            <Route path="/guidelines" element={renderContent()} />
+            <Route path="/hipaa" element={renderContent()} />
+            <Route path="/health-tips" element={renderContent()} />
+            <Route path="/tags" element={renderContent()} />
+            <Route path="/settings" element={renderContent()} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
         </main>
       </div>
     </div>
@@ -301,25 +329,29 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <AppContent />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: 'rgba(30, 41, 59, 0.9)',
-              color: '#F8FAFC',
-              border: '1px solid rgba(51, 65, 85, 0.3)',
-              borderRadius: '12px',
-              backdropFilter: 'blur(12px)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            },
-          }}
-        />
-      </AuthProvider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/*" element={<AppContent />} />
+          </Routes>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: 'rgba(30, 41, 59, 0.9)',
+                color: '#F8FAFC',
+                border: '1px solid rgba(51, 65, 85, 0.3)',
+                borderRadius: '12px',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+              },
+            }}
+          />
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

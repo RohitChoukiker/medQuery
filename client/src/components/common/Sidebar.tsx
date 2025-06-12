@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, 
   MessageSquare, 
@@ -25,6 +26,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getMenuItems = () => {
     const commonItems = [
@@ -119,16 +122,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         <div className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const isActive = activeTab === item.id || location.pathname === `/${item.id}`;
             
             return (
               <motion.button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  navigate(`/${item.id}`);
+                }}
                 whileHover={{ scale: 1.02, x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 className={`w-full group relative overflow-hidden rounded-xl transition-all duration-300 ${
-                  isActive
+                  isActive || location.pathname === `/${item.id}`
                     ? 'bg-gradient-to-r from-brand-500/20 to-accent-blue-light/20 dark:to-accent-blue-dark/20 text-brand-600 dark:text-brand-400 border border-brand-200/50 dark:border-brand-700/50 shadow-medical dark:shadow-medical-dark'
                     : 'text-light-text-secondary dark:text-dark-text-secondary hover:bg-surface-light/70 dark:hover:bg-surface-dark/70 hover:text-light-text-primary dark:hover:text-dark-text-primary border border-transparent hover:border-light-border/30 dark:hover:border-dark-border/30'
                 }`}
