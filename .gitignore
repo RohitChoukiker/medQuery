@@ -38,6 +38,8 @@ ENV/
 env.bak/
 venv.bak/
 pyvenv.cfg
+server/env/
+*/env/
 
 # IDE
 .vscode/
