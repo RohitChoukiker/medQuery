@@ -3,9 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import enum
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # SQLite database URL
-SQLALCHEMY_DATABASE_URL = "sqlite:///./medquery.db"
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./medQuery.db")
 
 # Create SQLAlchemy engine
 engine = create_engine(

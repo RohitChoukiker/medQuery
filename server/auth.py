@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
+import os
+from dotenv import load_dotenv
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
@@ -9,15 +11,18 @@ from database import get_db
 from models import User
 from schemas import TokenData
 
-# Security configurations
-SECRET_KEY = "your-secret-key-here-change-in-production"  # Change this in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# Load environment variables
+load_dotenv()
 
-# Password hashing
+# Security configurations
+SECRET_KEY = os.getenv("SECRET_KEY", "sz9ngkji2s")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# OAuth2 scheme
+
 security = HTTPBearer()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
