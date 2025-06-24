@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from pydantic import ValidationError
+import logging
 from database import get_db
 from models import User
 from schemas import UserCreate, UserLogin, Token, UserProfile, SignupResponse, ErrorResponse
@@ -14,6 +15,9 @@ from auth import (
     get_current_user,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -52,19 +56,32 @@ async def signup(user_data: UserCreate, db: Session = Depends(get_db)):
             user_role=db_user.role.value
         )
         
+    except HTTPException:
+        # Re-raise HTTP exceptions (like the duplicate email check above)
+        raise
     except ValidationError as e:
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Validation error: {str(e)}"
         )
-    except IntegrityError:
+    except IntegrityError as e:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered. Please use a different email address."
-        )
+        # Check if it's a duplicate email error
+        if "UNIQUE constraint failed: users.email" in str(e) or "duplicate key value violates unique constraint" in str(e):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered. Please use a different email address."
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Data integrity error occurred during registration."
+            )
     except Exception as e:
         db.rollback()
+        # Log the actual error for debugging
+        logger.error(f"Unexpected error during signup for email {user_data.email}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred during registration. Please try again."

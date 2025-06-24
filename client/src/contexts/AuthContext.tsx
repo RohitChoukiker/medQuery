@@ -41,7 +41,7 @@ export const useAuth = () => {
 };
 
 // API URL
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://127.0.0.1:8000';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -100,7 +100,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (!response.ok) {
-        return false;
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Login failed:', errorData);
+        throw new Error(errorData.detail || 'Login failed');
       }
 
       const data = await response.json();
@@ -127,10 +129,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return true;
       }
       
-      return false;
+      throw new Error('Failed to fetch user data');
     } catch (error) {
       console.error('Login failed:', error);
-      return false;
+      throw error; // Re-throw to handle in component
     }
   };
 

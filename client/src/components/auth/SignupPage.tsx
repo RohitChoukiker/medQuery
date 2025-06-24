@@ -16,6 +16,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useAuth, UserRole } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -45,6 +46,7 @@ const SignupPage: React.FC<SignupPageProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { signup } = useAuth();
+  const navigate = useNavigate();
 
   const roles = [
     {
@@ -164,6 +166,11 @@ const SignupPage: React.FC<SignupPageProps> = ({
         toast.success(
           "Welcome to MedQuery Agent! Account created successfully."
         );
+        
+        // Redirect to login page after successful signup
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
       } else {
         toast.error("Account creation failed. Please try again.");
       }

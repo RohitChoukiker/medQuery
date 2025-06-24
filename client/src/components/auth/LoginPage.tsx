@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Stethoscope, Microscope, Heart, Shield, ArrowLeft, Activity } from 'lucide-react';
 import { useAuth, UserRole } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 interface LoginPageProps {
@@ -16,6 +17,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const roles = [
     { 
@@ -60,11 +62,31 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
       const success = await login(email, password, selectedRole);
       if (success) {
         toast.success(`Welcome to MedQuery Agent, ${selectedRole}!`);
-      } else {
-        toast.error('Invalid medical credentials');
+        
+        // Role-based redirect
+        switch (selectedRole) {
+          case 'doctor':
+            navigate('/dashboard');
+            break;
+          case 'researcher':
+            navigate('/dashboard');
+            break;
+          case 'patient':
+            navigate('/dashboard');
+            break;
+          case 'admin':
+            navigate('/dashboard');
+            break;
+          default:
+            navigate('/dashboard');
+        }
       }
-    } catch (error) {
-      toast.error('Medical system login failed. Please try again.');
+    } catch (error: any) {
+      console.error('Login Error:', error);
+      
+      // Show specific error message from backend
+      const errorMessage = error.message || 'Medical system login failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
