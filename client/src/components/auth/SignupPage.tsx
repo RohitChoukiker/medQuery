@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Stethoscope, Microscope, Heart, Shield, ArrowLeft, Activity, CheckCircle, AlertCircle, User, Mail, Lock } from 'lucide-react';
-import { useAuth, UserRole } from '../../contexts/AuthContext';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Eye,
+  EyeOff,
+  Stethoscope,
+  Microscope,
+  Heart,
+  Shield,
+  ArrowLeft,
+  Activity,
+  CheckCircle,
+  AlertCircle,
+  User,
+  Mail,
+  Lock,
+} from "lucide-react";
+import { useAuth, UserRole } from "../../contexts/AuthContext";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface SignupPageProps {
   onBackToLanding?: () => void;
   onSwitchToLogin?: () => void;
 }
 
-const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogin }) => {
+const SignupPage: React.FC<SignupPageProps> = ({
+  onBackToLanding,
+  onSwitchToLogin,
+}) => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    selectedRole: 'doctor' as UserRole,
-    licenseNumber: '',
-    institution: '',
-    specialization: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    selectedRole: "doctor" as UserRole,
+    licenseNumber: "",
+    institution: "",
+    specialization: "",
     agreeToTerms: false,
-    agreeToHipaa: false
+    agreeToHipaa: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,37 +47,40 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
   const { signup } = useAuth();
 
   const roles = [
-    { 
-      id: 'doctor' as UserRole, 
-      label: 'Medical Doctor', 
-      icon: Stethoscope, 
-      color: 'from-brand-500 to-accent-blue-light dark:to-accent-blue-dark',
-      description: 'Licensed physician providing patient care',
-      requirements: ['Medical License', 'Hospital Affiliation']
+    {
+      id: "doctor" as UserRole,
+      label: "Medical Doctor",
+      icon: Stethoscope,
+      color: "from-brand-500 to-accent-blue-light dark:to-accent-blue-dark",
+      description: "Licensed physician providing patient care",
+      requirements: ["Medical License", "Hospital Affiliation"],
     },
-    { 
-      id: 'researcher' as UserRole, 
-      label: 'Medical Researcher', 
-      icon: Microscope, 
-      color: 'from-accent-purple-light to-pink-500 dark:from-accent-purple-dark dark:to-pink-400',
-      description: 'Research scientist in medical field',
-      requirements: ['PhD/MD', 'Research Institution']
+    {
+      id: "researcher" as UserRole,
+      label: "Medical Researcher",
+      icon: Microscope,
+      color:
+        "from-accent-purple-light to-pink-500 dark:from-accent-purple-dark dark:to-pink-400",
+      description: "Research scientist in medical field",
+      requirements: ["PhD/MD", "Research Institution"],
     },
-    { 
-      id: 'patient' as UserRole, 
-      label: 'Patient', 
-      icon: Heart, 
-      color: 'from-accent-green-light to-brand-600 dark:from-accent-green-dark dark:to-brand-500',
-      description: 'Individual seeking health information',
-      requirements: ['Valid Email', 'Age Verification']
+    {
+      id: "patient" as UserRole,
+      label: "Patient",
+      icon: Heart,
+      color:
+        "from-accent-green-light to-brand-600 dark:from-accent-green-dark dark:to-brand-500",
+      description: "Individual seeking health information",
+      requirements: ["Valid Email", "Age Verification"],
     },
-    { 
-      id: 'admin' as UserRole, 
-      label: 'System Administrator', 
-      icon: Shield, 
-      color: 'from-accent-orange-light to-red-500 dark:from-accent-orange-dark dark:to-red-400',
-      description: 'Healthcare system administrator',
-      requirements: ['Admin Approval', 'Institution Verification']
+    {
+      id: "admin" as UserRole,
+      label: "System Administrator",
+      icon: Shield,
+      color:
+        "from-accent-orange-light to-red-500 dark:from-accent-orange-dark dark:to-red-400",
+      description: "Healthcare system administrator",
+      requirements: ["Admin Approval", "Institution Verification"],
     },
   ];
 
@@ -67,43 +88,50 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
     const newErrors: Record<string, string> = {};
 
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
+      newErrors.fullName = "Full name is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = "Password must be at least 8 characters";
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+      newErrors.password =
+        "Password must contain uppercase, lowercase, and number";
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
-    if ((formData.selectedRole === 'doctor' || formData.selectedRole === 'researcher') && !formData.licenseNumber.trim()) {
-      newErrors.licenseNumber = 'License/ID number is required for medical professionals';
+    if (
+      (formData.selectedRole === "doctor" ||
+        formData.selectedRole === "researcher") &&
+      !formData.licenseNumber.trim()
+    ) {
+      newErrors.licenseNumber =
+        "License/ID number is required for medical professionals";
     }
 
-    if (!formData.institution.trim() && formData.selectedRole !== 'patient') {
-      newErrors.institution = 'Institution/Hospital name is required';
+    if (!formData.institution.trim() && formData.selectedRole !== "patient") {
+      newErrors.institution = "Institution/Hospital name is required";
     }
 
     if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the terms and conditions';
+      newErrors.agreeToTerms = "You must agree to the terms and conditions";
     }
 
     if (!formData.agreeToHipaa) {
-      newErrors.agreeToHipaa = 'You must acknowledge HIPAA compliance requirements';
+      newErrors.agreeToHipaa =
+        "You must acknowledge HIPAA compliance requirements";
     }
 
     setErrors(newErrors);
@@ -112,47 +140,58 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Form validation
     if (!validateForm()) {
-      toast.error('Please correct the errors in the form');
+      toast.error("Please correct the errors in the form");
       return;
     }
 
     setIsLoading(true);
+
     try {
-      const success = await signup({
-        fullName: formData.fullName,
+      const response = await axios.post("http://127.0.0.1:8000/auth/signup", {
+        full_name: formData.fullName,
         email: formData.email,
         password: formData.password,
         role: formData.selectedRole,
-        licenseNumber: formData.licenseNumber,
+        license_number: formData.licenseNumber,
         institution: formData.institution,
-        specialization: formData.specialization
+        specialization: formData.specialization,
       });
 
-      if (success) {
-        toast.success(`Welcome to MedQuery Agent! Account created successfully.`);
+      if (response.status === 200 || response.status === 201) {
+        toast.success(
+          "Welcome to MedQuery Agent! Account created successfully."
+        );
       } else {
-        toast.error('Account creation failed. Please try again.');
+        toast.error("Account creation failed. Please try again.");
       }
-    } catch (error) {
-      toast.error('Registration failed. Please try again.');
+    } catch (error: any) {
+      console.error("Signup Error:", error.response?.data || error.message);
+      
+      // Show specific error message from backend
+      const errorMessage = error.response?.data?.detail || 
+                          error.response?.data?.message || 
+                          "Registration failed. Please try again.";
+      
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const getPasswordStrength = () => {
     const password = formData.password;
     let strength = 0;
-    
+
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password)) strength++;
     if (/[A-Z]/.test(password)) strength++;
@@ -230,16 +269,18 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                     <motion.button
                       key={role.id}
                       type="button"
-                      onClick={() => handleInputChange('selectedRole', role.id)}
+                      onClick={() => handleInputChange("selectedRole", role.id)}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`p-4 rounded-xl border-2 transition-all duration-300 ${
                         formData.selectedRole === role.id
-                          ? 'border-brand-500 bg-brand-50/50 dark:bg-brand-900/20 shadow-medical dark:shadow-medical-dark'
-                          : 'border-light-border dark:border-dark-border bg-surface-light/30 dark:bg-surface-dark/30 hover:border-brand-300 dark:hover:border-brand-600'
+                          ? "border-brand-500 bg-brand-50/50 dark:bg-brand-900/20 shadow-medical dark:shadow-medical-dark"
+                          : "border-light-border dark:border-dark-border bg-surface-light/30 dark:bg-surface-dark/30 hover:border-brand-300 dark:hover:border-brand-600"
                       }`}
                     >
-                      <div className={`w-10 h-10 bg-gradient-to-r ${role.color} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg`}>
+                      <div
+                        className={`w-10 h-10 bg-gradient-to-r ${role.color} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg`}
+                      >
                         <Icon className="w-5 h-5 text-white" />
                       </div>
                       <span className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary block mb-1">
@@ -266,10 +307,14 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                   <input
                     type="text"
                     value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("fullName", e.target.value)
+                    }
                     placeholder="Dr. John Smith"
                     className={`w-full pl-10 pr-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.fullName ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.fullName
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -292,10 +337,12 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="doctor@hospital.com"
                     className={`w-full pl-10 pr-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.email ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.email
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -310,21 +357,32 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
             </div>
 
             {/* Professional Information */}
-            {formData.selectedRole !== 'patient' && (
+            {formData.selectedRole !== "patient" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* License Number */}
                 <div>
                   <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
-                    {formData.selectedRole === 'doctor' ? 'Medical License Number' : 
-                     formData.selectedRole === 'researcher' ? 'Research ID/License' : 'Professional ID'}
+                    {formData.selectedRole === "doctor"
+                      ? "Medical License Number"
+                      : formData.selectedRole === "researcher"
+                      ? "Research ID/License"
+                      : "Professional ID"}
                   </label>
                   <input
                     type="text"
                     value={formData.licenseNumber}
-                    onChange={(e) => handleInputChange('licenseNumber', e.target.value)}
-                    placeholder={formData.selectedRole === 'doctor' ? 'MD123456' : 'RES789012'}
+                    onChange={(e) =>
+                      handleInputChange("licenseNumber", e.target.value)
+                    }
+                    placeholder={
+                      formData.selectedRole === "doctor"
+                        ? "MD123456"
+                        : "RES789012"
+                    }
                     className={`w-full px-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.licenseNumber ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.licenseNumber
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -339,16 +397,27 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                 {/* Institution */}
                 <div>
                   <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
-                    {formData.selectedRole === 'doctor' ? 'Hospital/Clinic' : 
-                     formData.selectedRole === 'researcher' ? 'Research Institution' : 'Organization'}
+                    {formData.selectedRole === "doctor"
+                      ? "Hospital/Clinic"
+                      : formData.selectedRole === "researcher"
+                      ? "Research Institution"
+                      : "Organization"}
                   </label>
                   <input
                     type="text"
                     value={formData.institution}
-                    onChange={(e) => handleInputChange('institution', e.target.value)}
-                    placeholder={formData.selectedRole === 'doctor' ? 'Mayo Clinic' : 'Johns Hopkins University'}
+                    onChange={(e) =>
+                      handleInputChange("institution", e.target.value)
+                    }
+                    placeholder={
+                      formData.selectedRole === "doctor"
+                        ? "Mayo Clinic"
+                        : "Johns Hopkins University"
+                    }
                     className={`w-full px-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.institution ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.institution
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -363,7 +432,8 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
             )}
 
             {/* Specialization (Optional) */}
-            {(formData.selectedRole === 'doctor' || formData.selectedRole === 'researcher') && (
+            {(formData.selectedRole === "doctor" ||
+              formData.selectedRole === "researcher") && (
               <div>
                 <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
                   Specialization (Optional)
@@ -371,8 +441,14 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                 <input
                   type="text"
                   value={formData.specialization}
-                  onChange={(e) => handleInputChange('specialization', e.target.value)}
-                  placeholder={formData.selectedRole === 'doctor' ? 'Cardiology, Neurology, etc.' : 'Oncology Research, Clinical Trials, etc.'}
+                  onChange={(e) =>
+                    handleInputChange("specialization", e.target.value)
+                  }
+                  placeholder={
+                    formData.selectedRole === "doctor"
+                      ? "Cardiology, Neurology, etc."
+                      : "Oncology Research, Clinical Trials, etc."
+                  }
                   className="w-full px-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border border-light-border/50 dark:border-dark-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted"
                 />
               </div>
@@ -388,12 +464,16 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-light-text-muted dark:text-dark-text-muted" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     placeholder="Create a strong password"
                     className={`w-full pl-10 pr-12 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.password ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.password
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -402,7 +482,11 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-light-text-muted dark:text-dark-text-muted hover:text-light-text-secondary dark:hover:text-dark-text-secondary transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
                 {formData.password && (
@@ -413,14 +497,23 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                           key={i}
                           className={`h-1 flex-1 rounded-full transition-colors ${
                             i < passwordStrength
-                              ? passwordStrength <= 2 ? 'bg-red-500' : passwordStrength <= 3 ? 'bg-yellow-500' : 'bg-green-500'
-                              : 'bg-gray-200 dark:bg-gray-700'
+                              ? passwordStrength <= 2
+                                ? "bg-red-500"
+                                : passwordStrength <= 3
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                              : "bg-gray-200 dark:bg-gray-700"
                           }`}
                         />
                       ))}
                     </div>
                     <p className="text-xs text-light-text-muted dark:text-dark-text-muted mt-1">
-                      Password strength: {passwordStrength <= 2 ? 'Weak' : passwordStrength <= 3 ? 'Medium' : 'Strong'}
+                      Password strength:{" "}
+                      {passwordStrength <= 2
+                        ? "Weak"
+                        : passwordStrength <= 3
+                        ? "Medium"
+                        : "Strong"}
                     </p>
                   </div>
                 )}
@@ -440,12 +533,16 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-light-text-muted dark:text-dark-text-muted" />
                   <input
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     placeholder="Confirm your password"
                     className={`w-full pl-10 pr-12 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
-                      errors.confirmPassword ? 'border-red-500' : 'border-light-border/50 dark:border-dark-border/50'
+                      errors.confirmPassword
+                        ? "border-red-500"
+                        : "border-light-border/50 dark:border-dark-border/50"
                     }`}
                     required
                   />
@@ -454,15 +551,20 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-light-text-muted dark:text-dark-text-muted hover:text-light-text-secondary dark:hover:text-dark-text-secondary transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
-                {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                  <p className="mt-1 text-xs text-green-500 flex items-center">
-                    <CheckCircle className="w-3 h-3 mr-1" />
-                    Passwords match
-                  </p>
-                )}
+                {formData.confirmPassword &&
+                  formData.password === formData.confirmPassword && (
+                    <p className="mt-1 text-xs text-green-500 flex items-center">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Passwords match
+                    </p>
+                  )}
                 {errors.confirmPassword && (
                   <p className="mt-1 text-xs text-red-500 flex items-center">
                     <AlertCircle className="w-3 h-3 mr-1" />
@@ -479,11 +581,23 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                   type="checkbox"
                   id="agreeToTerms"
                   checked={formData.agreeToTerms}
-                  onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("agreeToTerms", e.target.checked)
+                  }
                   className="mt-1 w-4 h-4 text-brand-600 bg-surface-light dark:bg-surface-dark border-light-border dark:border-dark-border rounded focus:ring-brand-500 focus:ring-2"
                 />
-                <label htmlFor="agreeToTerms" className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                  I agree to the <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">Terms of Service</span> and <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">Privacy Policy</span>
+                <label
+                  htmlFor="agreeToTerms"
+                  className="text-sm text-light-text-secondary dark:text-dark-text-secondary"
+                >
+                  I agree to the{" "}
+                  <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">
+                    Terms of Service
+                  </span>{" "}
+                  and{" "}
+                  <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">
+                    Privacy Policy
+                  </span>
                 </label>
               </div>
               {errors.agreeToTerms && (
@@ -498,11 +612,20 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
                   type="checkbox"
                   id="agreeToHipaa"
                   checked={formData.agreeToHipaa}
-                  onChange={(e) => handleInputChange('agreeToHipaa', e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("agreeToHipaa", e.target.checked)
+                  }
                   className="mt-1 w-4 h-4 text-brand-600 bg-surface-light dark:bg-surface-dark border-light-border dark:border-dark-border rounded focus:ring-brand-500 focus:ring-2"
                 />
-                <label htmlFor="agreeToHipaa" className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                  I acknowledge and agree to <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">HIPAA compliance requirements</span> and medical data handling policies
+                <label
+                  htmlFor="agreeToHipaa"
+                  className="text-sm text-light-text-secondary dark:text-dark-text-secondary"
+                >
+                  I acknowledge and agree to{" "}
+                  <span className="text-brand-600 dark:text-brand-400 hover:underline cursor-pointer">
+                    HIPAA compliance requirements
+                  </span>{" "}
+                  and medical data handling policies
                 </label>
               </div>
               {errors.agreeToHipaa && (
@@ -537,7 +660,7 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
             {/* Login Link */}
             <div className="text-center">
               <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                Already have a medical account?{' '}
+                Already have a medical account?{" "}
                 <button
                   type="button"
                   onClick={onSwitchToLogin}
@@ -558,7 +681,8 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLanding, onSwitchToLogi
               </span>
             </div>
             <p className="text-xs text-light-text-muted dark:text-dark-text-muted">
-              Your account will be verified according to medical industry standards. All data is encrypted and HIPAA compliant.
+              Your account will be verified according to medical industry
+              standards. All data is encrypted and HIPAA compliant.
             </p>
           </div>
         </motion.div>
