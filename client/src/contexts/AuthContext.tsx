@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authAPI, apiClient } from '../api';
 
 export type UserRole = 'doctor' | 'researcher' | 'patient' | 'admin';
 
@@ -26,7 +27,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string, role: UserRole) => Promise<boolean>;
   signup: (data: SignupData) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -40,8 +41,7 @@ export const useAuth = () => {
   return context;
 };
 
-// API URL
-const API_URL = 'http://127.0.0.1:8000';
+// Using the centralized API client from api.ts
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -54,17 +54,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Check if user is already logged in
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       if (token) {
         try {
-          const response = await fetch(`${API_URL}/auth/me`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
+          // Set token in API client
+          apiClient.setToken(token);
+          const response = await authAPI.getCurrentUser();
           
-          if (response.ok) {
-            const userData = await response.json();
+          if (response.data && response.status === 200) {
+            const userData = response.data;
             setUser({
               id: userData.id.toString(),
               email: userData.email,
@@ -76,11 +74,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             });
           } else {
             // Token is invalid or expired
-            localStorage.removeItem('token');
+            localStorage.removeItem('access_token');
+            apiClient.removeToken();
           }
         } catch (error) {
           console.error('Auth check failed:', error);
-          localStorage.removeItem('token');
+          localStorage.removeItem('access_token');
+          apiClient.removeToken();
         }
       }
       setIsLoading(false);
@@ -91,42 +91,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string, role: UserRole): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password, role })
-      });
+      const response = await authAPI.login({ email, password, role });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Login failed:', errorData);
-        throw new Error(errorData.detail || 'Login failed');
+      if (response.error) {
+        console.error('Login failed:', response.error);
+        throw new Error(response.error);
       }
 
-      const data = await response.json();
-      localStorage.setItem('token', data.access_token);
-
-      // Fetch user data
-      const userResponse = await fetch(`${API_URL}/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${data.access_token}`
+      if (response.data?.access_token) {
+        // Token is already set in authAPI.login, now fetch user data
+        const userResponse = await authAPI.getCurrentUser();
+        
+        if (userResponse.data && userResponse.status === 200) {
+          const userData = userResponse.data;
+          setUser({
+            id: userData.id.toString(),
+            email: userData.email,
+            full_name: userData.full_name,
+            role: userData.role as UserRole,
+            license_number: userData.license_number,
+            institution: userData.institution,
+            specialization: userData.specialization
+          });
+          return true;
         }
-      });
-
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        setUser({
-          id: userData.id.toString(),
-          email: userData.email,
-          full_name: userData.full_name,
-          role: userData.role as UserRole,
-          license_number: userData.license_number,
-          institution: userData.institution,
-          specialization: userData.specialization
-        });
-        return true;
       }
       
       throw new Error('Failed to fetch user data');
@@ -138,23 +126,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signup = async (data: SignupData): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_URL}/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: data.email,
-          full_name: data.fullName,
-          password: data.password,
-          role: data.role,
-          license_number: data.licenseNumber,
-          institution: data.institution,
-          specialization: data.specialization
-        })
+      const response = await authAPI.signup({
+        email: data.email,
+        full_name: data.fullName,
+        password: data.password,
+        role: data.role,
+        license_number: data.licenseNumber,
+        institution: data.institution,
+        specialization: data.specialization
       });
 
-      if (!response.ok) {
+      if (response.error) {
+        console.error('Signup failed:', response.error);
         return false;
       }
 
@@ -166,9 +149,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
+  const logout = async () => {
+    try {
+      // Call logout API
+      await authAPI.logout();
+    } catch (error) {
+      console.error('Logout API failed:', error);
+    } finally {
+      // Always clean up locally
+      setUser(null);
+    }
   };
 
   if (isLoading) {
