@@ -1,6 +1,6 @@
 
 // export const BASE_URL = 'http://localhost:8000';  Development
- export const BASE_URL = 'https://medquery-med.onrender.com'; // Production
+ export const BASE_URL = 'https://medquery-med.onrender.com/'; // Production
 // export const BASE_URL = 'https://your-staging-domain.com'; // Staging
 
 
