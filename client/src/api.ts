@@ -1,8 +1,18 @@
+// export const BASE_URL = 'http://localhost:8000'; 
+export const BASE_URL = 'https://medquery-1.onrender.com'; // Production
 
- // export const BASE_URL = 'http://localhost:8000'; 
- export const BASE_URL = 'https://medquery-1.onrender.com'; // Production
+// Type definitions for API responses
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
 
-
+export interface SignupResponse {
+  message: string;
+  user_id: number;
+  user_email: string;
+  user_role: string;
+}
 
 export const API_ENDPOINTS = {
   // Authentication endpoints
@@ -131,12 +141,12 @@ export const apiClient = new ApiClient();
 export const authAPI = {
   // Sign up
   signup: async (userData: any) => {
-    return apiClient.post(API_ENDPOINTS.AUTH.SIGNUP, userData);
+    return apiClient.post<SignupResponse>(API_ENDPOINTS.AUTH.SIGNUP, userData);
   },
 
   // Login
   login: async (credentials: any) => {
-    const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGIN, credentials);
+    const response = await apiClient.post<LoginResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials);
     
     // If login successful, save token
     if (response.data?.access_token) {

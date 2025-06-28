@@ -4,6 +4,7 @@ import { Eye, EyeOff, Stethoscope, Microscope, Heart, Shield, ArrowLeft, Activit
 import { useAuth, UserRole } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { API_ENDPOINTS } from '../../api';
 
 interface LoginPageProps {
   onBackToLanding?: () => void;

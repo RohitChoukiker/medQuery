@@ -18,6 +18,7 @@ import {
 import { useAuth, UserRole } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_ENDPOINTS } from '../../api';
 import axios from "axios";
 
 interface SignupPageProps {
@@ -152,7 +153,7 @@ const SignupPage: React.FC<SignupPageProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/auth/signup", {
+      const response = await axios.post(API_ENDPOINTS.AUTH.SIGNUP, {
         full_name: formData.fullName,
         email: formData.email,
         password: formData.password,
