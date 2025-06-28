@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Sun, Moon, User, LogOut, Bell, Search, Stethoscope } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
+import UserProfilePopup from './UserProfilePopup';
 
 interface NavbarProps {
   showThemeToggle?: boolean;
@@ -11,6 +12,8 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ showThemeToggle = true }) => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileButtonRef = useRef<HTMLDivElement>(null);
 
   return (
     <motion.nav
@@ -70,35 +73,38 @@ const Navbar: React.FC<NavbarProps> = ({ showThemeToggle = true }) => {
             {/* Medical User Menu - Only show when authenticated */}
             {user && (
               <>
-                {/* Medical Notifications */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative p-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-brand-600 dark:hover:text-brand-400 transition-colors rounded-lg hover:bg-surface-light/50 dark:hover:bg-surface-dark/50"
-                >
-                  <Bell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-medical-emergency rounded-full text-xs animate-pulse"></span>
-                </motion.button>
+               
 
                 {/* Medical User Profile */}
-                <div className="flex items-center space-x-3">
-                  <div className="hidden sm:block text-right">
-                    <p className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
-                      {user?.name}
-                    </p>
-                    <p className="text-xs text-light-text-muted dark:text-dark-text-muted capitalize flex items-center">
-                      <span className={`w-2 h-2 rounded-full mr-1 ${
-                        user?.role === 'doctor' ? 'bg-brand-500' :
-                        user?.role === 'researcher' ? 'bg-accent-purple-light' :
-                        user?.role === 'patient' ? 'bg-accent-green-light' :
-                        'bg-accent-orange-light'
-                      }`}></span>
-                      {user?.role}
-                    </p>
+                <div className="relative flex items-center space-x-3">
+                  <div 
+                    ref={profileButtonRef}
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center space-x-3 cursor-pointer hover:bg-surface-light/50 dark:hover:bg-surface-dark/50 rounded-lg p-2 transition-all"
+                  >
+                    <div className="hidden sm:block text-right">
+                      <p className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
+                        {user?.full_name}
+                      </p>
+                      <p className="text-xs text-light-text-muted dark:text-dark-text-muted capitalize flex items-center">
+                        <span className={`w-2 h-2 rounded-full mr-1 ${
+                          user?.role === 'doctor' ? 'bg-brand-500' :
+                          user?.role === 'researcher' ? 'bg-accent-purple-light' :
+                          user?.role === 'patient' ? 'bg-accent-green-light' :
+                          'bg-accent-orange-light'
+                        }`}></span>
+                        {user?.role}
+                      </p>
+                    </div>
+                    <motion.div 
+                      className="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-full flex items-center justify-center shadow-medical dark:shadow-medical-dark"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <User className="w-4 h-4 text-white" />
+                    </motion.div>
                   </div>
-                  <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-accent-blue-light dark:to-accent-blue-dark rounded-full flex items-center justify-center shadow-medical dark:shadow-medical-dark">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
+                  
                   <motion.button
                     onClick={logout}
                     whileHover={{ scale: 1.05 }}
@@ -107,6 +113,13 @@ const Navbar: React.FC<NavbarProps> = ({ showThemeToggle = true }) => {
                   >
                     <LogOut className="w-4 h-4" />
                   </motion.button>
+
+                  {/* User Profile Popup */}
+                  <UserProfilePopup
+                    isOpen={isProfileOpen}
+                    onClose={() => setIsProfileOpen(false)}
+                    anchorRef={profileButtonRef}
+                  />
                 </div>
               </>
             )}

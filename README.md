@@ -34,7 +34,7 @@ Setup Instructions:
 2. For Backend
    cd server
    pip install -r requirements.txt
-   uvicorn main:app --reload
+   uvicorn main:app --reload          
    
 3. For client  
    cd client
