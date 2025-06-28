@@ -6,11 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 interface LoginPageProps {
-  onBackToLanding?: () => void;
   onSwitchToSignup?: () => void;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole>('doctor');
@@ -109,20 +108,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        {/* Medical Back Button */}
-        {onBackToLanding && (
-          <motion.button
-            onClick={onBackToLanding}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ x: -4 }}
-            className="flex items-center space-x-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-all duration-300 p-2 rounded-lg hover:bg-surface-light/50 dark:hover:bg-surface-dark/50"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Medical Portal</span>
-          </motion.button>
-        )}
-
         {/* Medical Header */}
         <div className="text-center mb-8">
           <motion.div

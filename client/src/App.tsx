@@ -41,7 +41,6 @@ const AppContent: React.FC = () => {
           <>
             <Navbar showThemeToggle={true} />
             <LoginPage 
-              onBackToLanding={() => navigate('/')}
               onSwitchToSignup={() => navigate('/signup')}
             />
           </>
