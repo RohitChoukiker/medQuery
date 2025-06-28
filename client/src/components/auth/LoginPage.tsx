@@ -86,7 +86,16 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
       console.error('Login Error:', error);
       
       // Show specific error message from backend
-      const errorMessage = error.message || 'Medical system login failed. Please try again.';
+      let errorMessage = 'Medical system login failed. Please try again.';
+      
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -269,7 +278,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
                 <strong>Email:</strong> demo@medquery.com
               </p>
               <p className="text-xs text-brand-600 dark:text-brand-400">
-                <strong>Password:</strong> demo123
+                <strong>Password:</strong> Demo123456
               </p>
               <p className="text-xs text-brand-500 dark:text-brand-500 mt-2">
                 * Works with any selected medical role

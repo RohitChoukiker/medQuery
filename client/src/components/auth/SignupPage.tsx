@@ -18,8 +18,7 @@ import {
 import { useAuth, UserRole } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { API_ENDPOINTS } from '../../api';
-import axios from "axios";
+import { authAPI } from '../../api';
 
 interface SignupPageProps {
   onBackToLanding?: () => void;
@@ -153,7 +152,7 @@ const SignupPage: React.FC<SignupPageProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.post(API_ENDPOINTS.AUTH.SIGNUP, {
+      const response = await authAPI.signup({
         full_name: formData.fullName,
         email: formData.email,
         password: formData.password,
@@ -176,12 +175,20 @@ const SignupPage: React.FC<SignupPageProps> = ({
         toast.error("Account creation failed. Please try again.");
       }
     } catch (error: any) {
-      console.error("Signup Error:", error.response?.data || error.message);
+      console.error("Signup Error:", error);
       
       // Show specific error message from backend
-      const errorMessage = error.response?.data?.detail || 
-                          error.response?.data?.message || 
-                          "Registration failed. Please try again.";
+      let errorMessage = "Registration failed. Please try again.";
+      
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.error) {
+        errorMessage = error.error;
+      }
       
       toast.error(errorMessage);
     } finally {

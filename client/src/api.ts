@@ -86,11 +86,18 @@ export class ApiClient {
         },
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        // If response is not JSON, try to get text
+        const textData = await response.text();
+        data = { detail: textData || 'Invalid response format' };
+      }
 
       return {
         data: response.ok ? data : undefined,
-        error: !response.ok ? data.detail || 'An error occurred' : undefined,
+        error: !response.ok ? data.detail || data.message || 'An error occurred' : undefined,
         message: data.message,
         status: response.status,
       };
