@@ -4,7 +4,6 @@ import { Eye, EyeOff, Stethoscope, Microscope, Heart, Shield, ArrowLeft, Activit
 import { useAuth, UserRole } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { API_ENDPOINTS } from '../../api';
 
 interface LoginPageProps {
   onBackToLanding?: () => void;
@@ -161,7 +160,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
               <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-3">
                 Select Your Medical Role
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-wrap gap-3">
                 {roles.map((role) => {
                   const Icon = role.icon;
                   return (
@@ -171,7 +170,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
                       onClick={() => setSelectedRole(role.id)}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                      className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 transition-all duration-300 ${
                         selectedRole === role.id
                           ? 'border-brand-500 bg-brand-50/50 dark:bg-brand-900/20 shadow-medical dark:shadow-medical-dark'
                           : 'border-light-border dark:border-dark-border bg-surface-light/30 dark:bg-surface-dark/30 hover:border-brand-300 dark:hover:border-brand-600'
@@ -267,34 +266,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onSwitchToSignup
             </div>
           </form>
 
-          {/* Medical Demo Credentials */}
-          <div className="mt-6 p-4 bg-brand-50/50 dark:bg-brand-900/20 rounded-xl border border-brand-200/50 dark:border-brand-700/50">
-            <div className="flex items-center space-x-2 mb-2">
-              <Shield className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-              <p className="text-sm text-brand-700 dark:text-brand-300 font-medium">Demo Medical Credentials:</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs text-brand-600 dark:text-brand-400">
-                <strong>Email:</strong> demo@medquery.com
-              </p>
-              <p className="text-xs text-brand-600 dark:text-brand-400">
-                <strong>Password:</strong> Demo123456
-              </p>
-              <p className="text-xs text-brand-500 dark:text-brand-500 mt-2">
-                * Works with any selected medical role
-              </p>
-            </div>
-          </div>
-
-          {/* Medical Security Notice */}
-          <div className="mt-4 p-3 bg-accent-green-light/10 dark:bg-accent-green-dark/10 rounded-lg border border-accent-green-light/20 dark:border-accent-green-dark/20">
-            <div className="flex items-center space-x-2">
-              <Shield className="w-3 h-3 text-accent-green-light dark:text-accent-green-dark" />
-              <span className="text-xs text-accent-green-light dark:text-accent-green-dark font-medium">
-                HIPAA Compliant • End-to-End Encrypted • Medical Grade Security
-              </span>
-            </div>
-          </div>
+          
         </motion.div>
       </motion.div>
     </div>
