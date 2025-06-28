@@ -25,13 +25,18 @@ app = FastAPI(
 )
 
 # Configure CORS
+import os
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000", 
         "http://localhost:5173",
         "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
+        FRONTEND_URL,  # Add your frontend production URL
+        "*"  # For development only - remove in production
     ], 
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -95,10 +100,13 @@ app.include_router(auth_router)
 
 if __name__ == "__main__":
     import uvicorn
+    # Get port from environment variable (for Render deployment) or default to 8080
+    port = int(os.getenv("PORT", 8080))
+    
     uvicorn.run(
         app, 
         host="0.0.0.0", 
-        port=8080,
+        port=port,
         log_level="info",
-        reload=True  # Enable auto-reload during development
+        reload=os.getenv("ENVIRONMENT", "development") == "development"
     )
