@@ -1,6 +1,6 @@
 
- export const BASE_URL = 'http://localhost:8000'; 
-// export const BASE_URL = 'https://medquery-med.onrender.com/'; // Production
+ // export const BASE_URL = 'http://localhost:8000'; 
+ export const BASE_URL = 'https://medquery-1.onrender.com'; // Production
 
 
 
