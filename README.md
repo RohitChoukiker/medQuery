@@ -20,7 +20,7 @@ MedQuery is an intelligent medical question-answering system that uses **LangCha
 
 | Layer      | Tools Used                               |
 |------------|-------------------------------------------|
-| Frontend   | React.js, Context API, Tailwind CSS       |
+| Frontend   | React.ts, Context API, Tailwind CSS       |
 | Backend    | FastAPI, LangChain, Hugging Face          |
 | Vector DB  | ChromaDB, OpenAI Embeddings               |
 | Data       | PDF files, PubMed, Biomedical Documents   |
