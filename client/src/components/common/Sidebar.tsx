@@ -41,8 +41,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
           ...commonItems,
           { id: 'upload', label: 'Patient Reports', icon: Upload, description: 'Upload Medical Files' },
           { id: 'history', label: 'Query History', icon: FileText, description: 'Previous Consultations' },
-          { id: 'bookmarks', label: 'Medical Bookmarks', icon: BookOpen, description: 'Saved Diagnoses' },
-          { id: 'settings', label: 'Clinical Settings', icon: Settings, description: 'Preferences & Config' },
+          //{ id: 'bookmarks', label: 'Medical Bookmarks', icon: BookOpen, description: 'Saved Diagnoses' },
+          // { id: 'settings', label: 'Clinical Settings', icon: Settings, description: 'Preferences & Config' },
         ];
       
       case 'researcher':
@@ -50,16 +50,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
           ...commonItems,
           { id: 'datasets', label: 'Research Datasets', icon: Upload, description: 'Clinical Data Upload' },
           { id: 'library', label: 'Medical Library', icon: BookOpen, description: 'Research Documents' },
-          { id: 'analytics', label: 'Research Analytics', icon: BarChart3, description: 'Data Insights' },
-          { id: 'tags', label: 'Medical Tags', icon: Tag, description: 'Categorization System' },
-          { id: 'settings', label: 'Research Settings', icon: Settings, description: 'Platform Configuration' },
+         // { id: 'analytics', label: 'Research Analytics', icon: BarChart3, description: 'Data Insights' },
+         // { id: 'tags', label: 'Medical Tags', icon: Tag, description: 'Categorization System' },
+          //{ id: 'settings', label: 'Research Settings', icon: Settings, description: 'Platform Configuration' },
         ];
       
       case 'patient':
         return [
           ...commonItems,
           { id: 'health-tips', label: 'Health Guidance', icon: Heart, description: 'Wellness Tips & Advice' },
-          { id: 'bookmarks', label: 'Saved Health Info', icon: BookOpen, description: 'Important Answers' },
+         // { id: 'bookmarks', label: 'Saved Health Info', icon: BookOpen, description: 'Important Answers' },
           { id: 'settings', label: 'Health Profile', icon: Settings, description: 'Personal Settings' },
         ];
       
@@ -67,10 +67,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         return [
           ...commonItems,
           { id: 'users', label: 'User Management', icon: Users, description: 'Healthcare Staff Control' },
-          { id: 'analytics', label: 'System Analytics', icon: BarChart3, description: 'Platform Metrics' },
-          { id: 'guidelines', label: 'Medical Guidelines', icon: FileText, description: 'Clinical Protocols' },
-          { id: 'hipaa', label: 'HIPAA Compliance', icon: Shield, description: 'Privacy & Security' },
-          { id: 'settings', label: 'System Configuration', icon: Settings, description: 'Platform Management' },
+          // { id: 'analytics', label: 'System Analytics', icon: BarChart3, description: 'Platform Metrics' },
+          // { id: 'guidelines', label: 'Medical Guidelines', icon: FileText, description: 'Clinical Protocols' },
+          // { id: 'hipaa', label: 'HIPAA Compliance', icon: Shield, description: 'Privacy & Security' },
+          // { id: 'settings', label: 'System Configuration', icon: Settings, description: 'Platform Management' },
         ];
       
       default:
