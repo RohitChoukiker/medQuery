@@ -325,7 +325,7 @@ const SignupPage: React.FC<SignupPageProps> = ({
                     onChange={(e) =>
                       handleInputChange("fullName", e.target.value)
                     }
-                    placeholder="Dr. John Smith"
+                    placeholder="Enter Your Full Name"
                     className={`w-full pl-10 pr-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
                       errors.fullName
                         ? "border-red-500"
@@ -426,8 +426,8 @@ const SignupPage: React.FC<SignupPageProps> = ({
                     }
                     placeholder={
                       formData.selectedRole === "doctor"
-                        ? "Mayo Clinic"
-                        : "Johns Hopkins University"
+                        ? "Your Clinic"
+                        : "Your University"
                     }
                     className={`w-full px-4 py-3 bg-surface-light/50 dark:bg-surface-dark/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all text-light-text-primary dark:text-dark-text-primary placeholder-light-text-muted dark:placeholder-dark-text-muted ${
                       errors.institution
