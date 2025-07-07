@@ -1,5 +1,5 @@
-// export const BASE_URL = 'http://localhost:8000'; 
-export const BASE_URL = 'https://medquery-1.onrender.com'; // Production
+ //export const BASE_URL = 'http://localhost:8000'; 
+ export const BASE_URL = 'https://medquery-1.onrender.com'; // Production
 
 // Type definitions for API responses
 export interface LoginResponse {
@@ -192,6 +192,11 @@ export const isAuthenticated = (): boolean => {
 // Utility function to get stored token
 export const getStoredToken = (): string | null => {
   return localStorage.getItem('access_token');
+};
+
+// Ask AI Medical Assistant
+export const askAI = async (question: string) => {
+  return apiClient.post<{ answer: string }>("/ai/ask", { question });
 };
 
 // Environment helper

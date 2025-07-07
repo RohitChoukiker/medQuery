@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, MessageSquare, BookOpen, TrendingUp, Activity, Shield } from 'lucide-react';
+import AIMedicalAssistant from '../chat/AIMedicalAssistant';
 
 const PatientDashboard: React.FC = () => {
   const stats = [
@@ -55,6 +56,9 @@ const PatientDashboard: React.FC = () => {
           Get reliable health information and track your wellness journey.
         </p>
       </motion.div>
+
+      {/* AI Medical Assistant Chat */}
+      <AIMedicalAssistant />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -8,7 +8,7 @@ import logging
 from database import get_db
 from models import User
 from schemas import UserCreate, UserLogin, Token, UserProfile, SignupResponse, ErrorResponse
-from auth import (
+from repository.auth import (
     authenticate_user, 
     create_access_token, 
     get_password_hash, 
