@@ -5,6 +5,7 @@ MedQuery is an intelligent medical question-answering system that uses **LangCha
 ---
 
 🌐 Hosted Link: [medquery.rohitchoukiker.me](https://medquery.rohitchoukiker.me) <br>
+
 ▲ Vercel Link: [med-query1.vercel.app](https://med-query1.vercel.app)
 
   
