@@ -5,9 +5,9 @@ import { Upload, Database, Tag, TrendingUp, FileText, Search } from 'lucide-reac
 const ResearcherDashboard: React.FC = () => {
   const stats = [
     { label: 'Datasets Uploaded', value: '23', icon: Upload, change: '+3 this month' },
-    { label: 'Documents Tagged', value: '156', icon: Tag, change: '+12 new tags' },
+    // { label: 'Documents Tagged', value: '156', icon: Tag, change: '+12 new tags' },
     { label: 'Research Queries', value: '89', icon: Search, change: '+15 this week' },
-    { label: 'Citations Found', value: '1,234', icon: FileText, change: '+45 new refs' },
+    // { label: 'Citations Found', value: '1,234', icon: FileText, change: '+45 new refs' },
   ];
 
   const recentDatasets = [
@@ -16,19 +16,19 @@ const ResearcherDashboard: React.FC = () => {
     { id: 3, name: 'Neurological Case Studies', size: '950 MB', uploaded: '2 weeks ago', tags: ['Neurology', 'Cases', 'Studies'] },
   ];
 
-  const trendingQueries = [
-    { query: 'Latest mRNA vaccine efficacy studies', count: 45, trend: '+12%' },
-    { query: 'AI applications in diagnostic imaging', count: 38, trend: '+8%' },
-    { query: 'Personalized medicine approaches', count: 32, trend: '+15%' },
-    { query: 'Gene therapy clinical outcomes', count: 28, trend: '+5%' },
-  ];
+  // const trendingQueries = [
+  //   { query: 'Latest mRNA vaccine efficacy studies', count: 45, trend: '+12%' },
+  //   { query: 'AI applications in diagnostic imaging', count: 38, trend: '+8%' },
+  //   { query: 'Personalized medicine approaches', count: 32, trend: '+15%' },
+  //   { query: 'Gene therapy clinical outcomes', count: 28, trend: '+5%' },
+  // ];
 
-  const tagCategories = [
-    { name: 'Oncology', count: 234, color: 'bg-red-500' },
-    { name: 'Cardiology', count: 189, color: 'bg-blue-500' },
-    { name: 'Neurology', count: 156, color: 'bg-purple-500' },
-    { name: 'Immunology', count: 123, color: 'bg-green-500' },
-  ];
+  // const tagCategories = [
+  //   { name: 'Oncology', count: 234, color: 'bg-red-500' },
+  //   { name: 'Cardiology', count: 189, color: 'bg-blue-500' },
+  //   { name: 'Neurology', count: 156, color: 'bg-purple-500' },
+  //   { name: 'Immunology', count: 123, color: 'bg-green-500' },
+  // ];
 
   return (
     <div className="p-6 space-y-6">
@@ -47,7 +47,7 @@ const ResearcherDashboard: React.FC = () => {
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -78,7 +78,7 @@ const ResearcherDashboard: React.FC = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className=" gap-6">
         {/* Recent Datasets */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,40 +122,11 @@ const ResearcherDashboard: React.FC = () => {
         </motion.div>
 
         {/* Trending Queries */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-lg"
-        >
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Trending Research Queries
-          </h2>
-          <div className="space-y-4">
-            {trendingQueries.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl border border-blue-200/20 dark:border-blue-700/20"
-              >
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-white text-sm">
-                    {item.query}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {item.count} queries
-                  </p>
-                </div>
-                <span className="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-full">
-                  {item.trend}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        
       </div>
 
       {/* Tag Categories */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
@@ -185,10 +156,10 @@ const ResearcherDashboard: React.FC = () => {
             </div>
           ))}
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Quick Actions */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
@@ -211,7 +182,7 @@ const ResearcherDashboard: React.FC = () => {
             <span className="font-medium text-gray-900 dark:text-white">View Analytics</span>
           </button>
         </div>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 };

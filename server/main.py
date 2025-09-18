@@ -5,6 +5,8 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from database import engine, Base
 from router.auth import router as auth_router
+from .schemas import Question
+from .qa_chain import build_chain
 
 import uvicorn
 import logging
@@ -95,6 +97,13 @@ async def health_check():
         "database": "connected",
         "authentication": "active"
     }
+
+qa_chain = build_chain()
+
+@app.post("/ask")
+async def ask_question(q: Question):
+    result = qa_chain.run(q.query)
+    return {"answer": result}
 
 # Include routers
 app.include_router(auth_router)

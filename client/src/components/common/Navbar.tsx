@@ -17,10 +17,14 @@ const Navbar: React.FC<NavbarProps> = ({ showThemeToggle = true }) => {
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="sticky top-0 z-50 backdrop-blur-xl bg-surface-light/80 dark:bg-surface-dark/80 border-b border-light-border/50 dark:border-dark-border/50 shadow-professional dark:shadow-professional-dark"
-    >
+  initial={{ y: -100 }}
+  animate={{ y: 0 }}
+  className="fixed w-full top-0 z-50 backdrop-blur-xl 
+             bg-surface-light/80 dark:bg-black/60 
+             border-b border-light-border/50 dark:border-dark-border/50 
+             shadow-professional dark:shadow-professional-dark 
+             transition-colors duration-300"
+>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Medical Logo */}
